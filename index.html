@@ -1,19 +1,700 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Document</title>
+    <meta
+      name="description"
+      content="Статистика профессионального российского футбола, баскетбола и хоккея с ежечасным обновлением из проверенных источников."
+    />
+    <title>СпортСтат РФ — российская спортивная статистика</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #09111f;
+        --bg-soft: #101b31;
+        --card: rgba(255, 255, 255, 0.08);
+        --card-strong: rgba(255, 255, 255, 0.14);
+        --line: rgba(255, 255, 255, 0.16);
+        --text: #f5f7fb;
+        --muted: #aebad0;
+        --accent: #5ce1e6;
+        --accent-2: #8dff8a;
+        --warning: #ffd166;
+        --shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+        --radius: 24px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background:
+          radial-gradient(circle at top left, rgba(92, 225, 230, 0.28), transparent 34rem),
+          radial-gradient(circle at top right, rgba(141, 255, 138, 0.14), transparent 28rem),
+          var(--bg);
+        color: var(--text);
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        line-height: 1.5;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .page {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 36px 0 56px;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.6fr);
+        gap: 24px;
+        align-items: stretch;
+        margin-bottom: 24px;
+      }
+
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.05));
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(18px);
+      }
+
+      .hero-main {
+        padding: clamp(28px, 5vw, 54px);
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 0 18px;
+        padding: 8px 12px;
+        border: 1px solid rgba(92, 225, 230, 0.36);
+        border-radius: 999px;
+        color: var(--accent);
+        background: rgba(92, 225, 230, 0.08);
+        font-size: 0.86rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+      }
+
+      .pulse {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--accent-2);
+        box-shadow: 0 0 0 0 rgba(141, 255, 138, 0.75);
+        animation: pulse 1.8s infinite;
+      }
+
+      @keyframes pulse {
+        70% {
+          box-shadow: 0 0 0 12px rgba(141, 255, 138, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(141, 255, 138, 0);
+        }
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 820px;
+        font-size: clamp(2.35rem, 6vw, 5.2rem);
+        line-height: 0.95;
+        letter-spacing: -0.07em;
+      }
+
+      .hero-copy {
+        max-width: 760px;
+        margin: 24px 0 0;
+        color: var(--muted);
+        font-size: clamp(1rem, 2vw, 1.2rem);
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 28px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 46px;
+        padding: 0 18px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--text);
+        background: var(--card-strong);
+        font-weight: 700;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .button.primary {
+        border-color: transparent;
+        color: #06111c;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      }
+
+      .status-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 26px;
+      }
+
+      .status-card h2 {
+        margin: 0 0 16px;
+        font-size: 1rem;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+
+      .refresh-time {
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+      }
+
+      .status-list {
+        display: grid;
+        gap: 12px;
+        margin-top: 24px;
+      }
+
+      .status-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 13px 0;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+      }
+
+      .status-row strong {
+        color: var(--text);
+      }
+
+      .tabs {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin: 26px 0 18px;
+      }
+
+      .tab {
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 16px;
+        color: var(--muted);
+        background: rgba(255, 255, 255, 0.05);
+        text-align: left;
+        cursor: pointer;
+        transition:
+          transform 160ms ease,
+          border-color 160ms ease,
+          background 160ms ease;
+      }
+
+      .tab:hover,
+      .tab.active {
+        transform: translateY(-2px);
+        border-color: rgba(92, 225, 230, 0.7);
+        background: rgba(92, 225, 230, 0.1);
+        color: var(--text);
+      }
+
+      .tab span {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 0.76rem;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: 18px;
+      }
+
+      .section {
+        padding: 24px;
+      }
+
+      .section-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 18px;
+        margin-bottom: 18px;
+      }
+
+      .section h2,
+      .section h3 {
+        margin: 0;
+        letter-spacing: -0.035em;
+      }
+
+      .muted {
+        color: var(--muted);
+      }
+
+      .metric-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .metric {
+        min-height: 118px;
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.06);
+      }
+
+      .metric .value {
+        display: block;
+        margin-top: 10px;
+        font-size: 1.7rem;
+        font-weight: 850;
+        letter-spacing: -0.05em;
+      }
+
+      .leaders {
+        display: grid;
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .leader {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 18px;
+        align-items: center;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .leader b {
+        display: block;
+      }
+
+      .leader span,
+      .metric span {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        width: max-content;
+        padding: 6px 10px;
+        border-radius: 999px;
+        color: #05131c;
+        background: var(--accent-2);
+        font-size: 0.82rem;
+        font-weight: 800;
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 620px;
+      }
+
+      th,
+      td {
+        padding: 14px 16px;
+        text-align: left;
+        border-bottom: 1px solid var(--line);
+      }
+
+      th {
+        color: var(--muted);
+        background: rgba(255, 255, 255, 0.06);
+        font-size: 0.78rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      tbody tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .sources {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        margin-top: 18px;
+      }
+
+      .source {
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .source h4 {
+        margin: 0 0 8px;
+      }
+
+      .source a {
+        color: var(--accent);
+        word-break: break-word;
+      }
+
+      .source-health {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-top: 16px;
+      }
+
+      .health-item {
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        color: var(--muted);
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .health-item strong {
+        display: block;
+        color: var(--text);
+      }
+
+      .notice {
+        margin-top: 18px;
+        padding: 14px 16px;
+        border: 1px solid rgba(255, 209, 102, 0.36);
+        border-radius: 18px;
+        color: #ffe6a0;
+        background: rgba(255, 209, 102, 0.08);
+      }
+
+      footer {
+        margin-top: 28px;
+        color: var(--muted);
+        text-align: center;
+      }
+
+      @media (max-width: 900px) {
+        .hero,
+        .grid,
+        .sources,
+        .source-health {
+          grid-template-columns: 1fr;
+        }
+
+        .tabs,
+        .metric-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
   </head>
   <body>
-    <form
-      enctype="multipart/form-data"
-      action="http://localhost:8080/upload"
-      method="post"
-    >
-      <input type="file" name="myFile" />
-      <input type="submit" value="upload" />
-    </form>
+    <main class="page">
+      <section class="hero">
+        <div class="panel hero-main">
+          <p class="eyebrow"><span class="pulse"></span> Обновление каждый час</p>
+          <h1>Российская спортивная статистика в одном месте</h1>
+          <p class="hero-copy">
+            Дашборд собирает ключевые показатели по профессиональному российскому футболу,
+            баскетболу и хоккею. Витрина работает с JSON-снимком данных, который обновляется
+            ежечасным заданием и ссылается на официальные сайты лиг.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#dashboard">Смотреть статистику</a>
+            <a class="button" href="#sources">Проверенные источники</a>
+          </div>
+        </div>
+
+        <aside class="panel status-card" aria-label="Статус обновления данных">
+          <div>
+            <h2>Последний импорт</h2>
+            <p class="refresh-time" id="lastUpdated">Загрузка...</p>
+          </div>
+          <div class="status-list">
+            <div class="status-row">
+              <span>Следующее обновление</span>
+              <strong id="nextUpdate">-</strong>
+            </div>
+            <div class="status-row">
+              <span>Периодичность</span>
+              <strong id="refreshInterval">60 минут</strong>
+            </div>
+            <div class="status-row">
+              <span>Статус источников</span>
+              <strong id="sourceStatus">Проверяется</strong>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <nav class="tabs" id="sportTabs" aria-label="Виды спорта"></nav>
+
+      <section class="grid" id="dashboard">
+        <article class="panel section">
+          <div class="section-header">
+            <div>
+              <p class="muted" id="leagueSeason">Сезон</p>
+              <h2 id="leagueTitle">Загрузка статистики</h2>
+            </div>
+            <span class="badge" id="leagueBadge">Official data</span>
+          </div>
+          <p class="muted" id="leagueSummary"></p>
+          <div class="metric-grid" id="metrics"></div>
+          <div class="notice" id="dataNotice"></div>
+        </article>
+
+        <article class="panel section">
+          <div class="section-header">
+            <div>
+              <p class="muted">Турнирная таблица</p>
+              <h3>Лидеры сезона</h3>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead id="standingsHead"></thead>
+              <tbody id="standingsBody"></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <section class="grid" style="margin-top: 18px">
+        <article class="panel section">
+          <div class="section-header">
+            <div>
+              <p class="muted">Ключевые показатели</p>
+              <h3>Что важно сейчас</h3>
+            </div>
+          </div>
+          <div class="leaders" id="leaders"></div>
+        </article>
+
+        <article class="panel section" id="sources">
+          <div class="section-header">
+            <div>
+              <p class="muted">Проверка источников</p>
+              <h3>Официальные каналы данных</h3>
+            </div>
+          </div>
+          <div class="source-health" id="sourceHealth"></div>
+        </article>
+      </section>
+
+      <section class="panel section" style="margin-top: 18px">
+        <div class="section-header">
+          <div>
+            <p class="muted">Методология</p>
+            <h3>Откуда берутся данные</h3>
+          </div>
+        </div>
+        <div class="sources" id="sourceCards"></div>
+      </section>
+
+      <footer>
+        Данные отображаются только со ссылками на первоисточники. Для публикации используйте
+        планировщик <code>scripts/update_sports_data.py</code> с интервалом один час.
+      </footer>
+    </main>
+
+    <script>
+      const DATA_URL = "data/sports-stats.json";
+      const HOUR_MS = 60 * 60 * 1000;
+      let dashboardData = null;
+      let activeSportId = "football";
+
+      const formatDateTime = (value) =>
+        new Intl.DateTimeFormat("ru-RU", {
+          dateStyle: "medium",
+          timeStyle: "short",
+          timeZone: "Europe/Moscow",
+        }).format(new Date(value));
+
+      const escapeHtml = (value) =>
+        String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+
+      async function loadData(reason = "initial") {
+        const hourKey = Math.floor(Date.now() / HOUR_MS);
+        const response = await fetch(`${DATA_URL}?hour=${hourKey}&reason=${reason}`, {
+          cache: "no-store",
+        });
+
+        if (!response.ok) {
+          throw new Error(`Не удалось загрузить статистику: ${response.status}`);
+        }
+
+        dashboardData = await response.json();
+        renderDashboard();
+      }
+
+      function getActiveSport() {
+        return dashboardData.sports.find((sport) => sport.id === activeSportId) || dashboardData.sports[0];
+      }
+
+      function renderTabs() {
+        const tabs = document.getElementById("sportTabs");
+        tabs.innerHTML = dashboardData.sports
+          .map(
+            (sport) => `
+              <button class="tab ${sport.id === activeSportId ? "active" : ""}" data-sport="${escapeHtml(sport.id)}">
+                <span>${escapeHtml(sport.kind)}</span>
+                ${escapeHtml(sport.league)}
+              </button>
+            `,
+          )
+          .join("");
+
+        tabs.querySelectorAll("button").forEach((button) => {
+          button.addEventListener("click", () => {
+            activeSportId = button.dataset.sport;
+            renderDashboard();
+          });
+        });
+      }
+
+      function renderMeta() {
+        document.getElementById("lastUpdated").textContent = formatDateTime(dashboardData.generatedAt);
+        document.getElementById("nextUpdate").textContent = formatDateTime(dashboardData.nextUpdateAt);
+        document.getElementById("refreshInterval").textContent =
+          `${dashboardData.refreshIntervalMinutes} минут`;
+
+        const healthyCount = dashboardData.sourceHealth.filter((source) => source.ok).length;
+        document.getElementById("sourceStatus").textContent =
+          `${healthyCount}/${dashboardData.sourceHealth.length} доступны`;
+      }
+
+      function renderSport() {
+        const sport = getActiveSport();
+        document.getElementById("leagueSeason").textContent = sport.season;
+        document.getElementById("leagueTitle").textContent = sport.league;
+        document.getElementById("leagueSummary").textContent = sport.summary;
+        document.getElementById("leagueBadge").textContent = sport.kind;
+        document.getElementById("dataNotice").textContent = sport.notice;
+
+        document.getElementById("metrics").innerHTML = sport.metrics
+          .map(
+            (metric) => `
+              <div class="metric">
+                <span>${escapeHtml(metric.label)}</span>
+                <strong class="value">${escapeHtml(metric.value)}</strong>
+                <span>${escapeHtml(metric.context)}</span>
+              </div>
+            `,
+          )
+          .join("");
+
+        document.getElementById("standingsHead").innerHTML = `
+          <tr>
+            ${sport.standings.columns.map((column) => `<th>${escapeHtml(column)}</th>`).join("")}
+          </tr>
+        `;
+        document.getElementById("standingsBody").innerHTML = sport.standings.rows
+          .map(
+            (row) => `
+              <tr>
+                ${row.map((cell) => `<td>${escapeHtml(cell)}</td>`).join("")}
+              </tr>
+            `,
+          )
+          .join("");
+
+        document.getElementById("leaders").innerHTML = sport.leaders
+          .map(
+            (leader) => `
+              <div class="leader">
+                <div>
+                  <span>${escapeHtml(leader.label)}</span>
+                  <b>${escapeHtml(leader.name)}</b>
+                </div>
+                <strong>${escapeHtml(leader.value)}</strong>
+              </div>
+            `,
+          )
+          .join("");
+      }
+
+      function renderSources() {
+        document.getElementById("sourceCards").innerHTML = dashboardData.sources
+          .map(
+            (source) => `
+              <article class="source">
+                <h4>${escapeHtml(source.name)}</h4>
+                <p class="muted">${escapeHtml(source.description)}</p>
+                <a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">
+                  ${escapeHtml(source.url)}
+                </a>
+              </article>
+            `,
+          )
+          .join("");
+
+        document.getElementById("sourceHealth").innerHTML = dashboardData.sourceHealth
+          .map(
+            (source) => `
+              <div class="health-item">
+                <strong>${escapeHtml(source.name)}</strong>
+                ${source.ok ? "Доступен" : "Требует проверки"} · HTTP ${escapeHtml(source.status || "n/a")}
+              </div>
+            `,
+          )
+          .join("");
+      }
+
+      function renderDashboard() {
+        renderTabs();
+        renderMeta();
+        renderSport();
+        renderSources();
+      }
+
+      loadData().catch((error) => {
+        document.getElementById("leagueTitle").textContent = "Данные временно недоступны";
+        document.getElementById("leagueSummary").textContent = error.message;
+      });
+
+      setInterval(() => loadData("hourly"), HOUR_MS);
+    </script>
   </body>
 </html>
