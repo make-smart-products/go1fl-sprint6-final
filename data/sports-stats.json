@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-05-26T10:21:47Z",
-  "nextUpdateAt": "2026-05-26T11:21:47Z",
+  "generatedAt": "2026-05-29T22:02:53Z",
+  "nextUpdateAt": "2026-05-29T23:02:53Z",
   "refreshIntervalMinutes": 60,
   "sources": [
     {
@@ -28,7 +28,7 @@
       "name": "Российская Премьер-Лига",
       "ok": true,
       "status": 200,
-      "checkedAt": "2026-05-26T10:21:47Z",
+      "checkedAt": "2026-05-29T22:02:53Z",
       "title": "Российская Премьер-Лига, Новости, Матчи, Результаты | РПЛ"
     },
     {
@@ -36,7 +36,7 @@
       "name": "Единая Лига ВТБ",
       "ok": true,
       "status": 200,
-      "checkedAt": "2026-05-26T10:21:47Z",
+      "checkedAt": "2026-05-29T22:02:53Z",
       "title": "Единая Лига ВТБ | VTB United League - Официальный сайт"
     },
     {
@@ -44,7 +44,7 @@
       "name": "Континентальная хоккейная лига",
       "ok": false,
       "status": 403,
-      "checkedAt": "2026-05-26T10:21:47Z",
+      "checkedAt": "2026-05-29T22:02:53Z",
       "error": "Forbidden"
     }
   ],
