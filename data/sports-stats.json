@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-05-30T12:12:42Z",
-  "nextUpdateAt": "2026-05-30T13:12:42Z",
+  "generatedAt": "2026-05-30T14:46:11Z",
+  "nextUpdateAt": "2026-05-30T15:46:11Z",
   "refreshIntervalMinutes": 60,
   "sources": [
     {
@@ -28,7 +28,7 @@
       "name": "Российская Премьер-Лига",
       "ok": true,
       "status": 200,
-      "checkedAt": "2026-05-30T12:12:42Z",
+      "checkedAt": "2026-05-30T14:46:11Z",
       "title": "Вы не робот?"
     },
     {
@@ -36,7 +36,7 @@
       "name": "Единая Лига ВТБ",
       "ok": true,
       "status": 200,
-      "checkedAt": "2026-05-30T12:12:42Z",
+      "checkedAt": "2026-05-30T14:46:11Z",
       "title": "Единая Лига ВТБ | VTB United League - Официальный сайт"
     },
     {
@@ -44,7 +44,7 @@
       "name": "Континентальная хоккейная лига",
       "ok": false,
       "status": 403,
-      "checkedAt": "2026-05-30T12:12:42Z",
+      "checkedAt": "2026-05-30T14:46:11Z",
       "error": "Forbidden"
     }
   ],
